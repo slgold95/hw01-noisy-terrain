@@ -12,6 +12,8 @@ import ShaderProgram, {Shader} from './rendering/gl/ShaderProgram';
 // This will be referred to by dat.GUI's functions that add GUI elements.
 const controls = {
   tesselations: 5,
+  height: 1, // Added this
+  scale: 1, // Added this
   'Load Scene': loadScene, // A function pointer, essentially
 };
 
@@ -22,6 +24,7 @@ let aPressed: boolean;
 let sPressed: boolean;
 let dPressed: boolean;
 let planePos: vec2;
+let startTime: number = Date.now(); // Added this
 
 function loadScene() {
   square = new Square(vec3.fromValues(0, 0, 0));
@@ -82,6 +85,9 @@ function main() {
 
   // Add controls to the gui
   const gui = new DAT.GUI();
+  gui.add(controls, 'height', 1, 3).step(0.05); // Added this
+  gui.add(controls, 'scale', 1, 5).step(0.05); // Added this
+
 
   // get canvas and webgl context
   const canvas = <HTMLCanvasElement> document.getElementById('canvas');
@@ -139,10 +145,8 @@ function main() {
     gl.viewport(0, 0, window.innerWidth, window.innerHeight);
     renderer.clear();
     processKeyPresses();
-    renderer.render(camera, lambert, [
-      plane,
-    ]);
-    renderer.render(camera, flat, [
+    renderer.render(camera, lambert, controls.height, controls.scale, [plane,]);
+    renderer.render(camera, flat, controls.height, controls.scale, [
       square,
     ]);
     stats.end();

@@ -30,6 +30,8 @@ class ShaderProgram {
   unifViewProj: WebGLUniformLocation;
   unifColor: WebGLUniformLocation;
   unifPlanePos: WebGLUniformLocation;
+  unifHeight: WebGLUniformLocation; // Added this
+  unifScale: WebGLUniformLocation; // Added this
 
   constructor(shaders: Array<Shader>) {
     this.prog = gl.createProgram();
@@ -49,12 +51,30 @@ class ShaderProgram {
     this.unifModelInvTr = gl.getUniformLocation(this.prog, "u_ModelInvTr");
     this.unifViewProj   = gl.getUniformLocation(this.prog, "u_ViewProj");
     this.unifPlanePos   = gl.getUniformLocation(this.prog, "u_PlanePos");
+    this.unifHeight   = gl.getUniformLocation(this.prog, "u_Height"); // Added this
+    this.unifScale   = gl.getUniformLocation(this.prog, "u_Scale"); // Added this
   }
 
   use() {
     if (activeProgram !== this.prog) {
       gl.useProgram(this.prog);
       activeProgram = this.prog;
+    }
+  }
+
+  // Added this
+  setuHeight(h: number){
+    this.use();
+    if(this.unifHeight !== -1){
+        gl.uniform1f(this.unifHeight, h);
+    }
+  }
+
+  // Added this
+  setuScale(s: number){
+    this.use();
+    if(this.unifScale !== -1){
+        gl.uniform1f(this.unifScale, s);
     }
   }
 
